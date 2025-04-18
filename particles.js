@@ -3,7 +3,7 @@ function initParticles() {
     const container = document.getElementById('particles');
     if (!container) return;
     
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 80; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
         particle.style.cssText = `
