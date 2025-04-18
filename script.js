@@ -1,177 +1,106 @@
-// ======================
-// MAIN PORTFOLIO SCRIPTS
-// ======================
+// === Modern ES Module Implementation ===
 
-// 1. Particle Background System
-function initParticles() {
-  const container = document.createElement('div');
-  container.id = 'particles-js';
-  container.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    pointer-events: none;
-  `;
-  document.body.prepend(container);
+// 1. Theme Toggle
+const themeToggle = document.getElementById('theme-toggle');
+const currentTheme = localStorage.getItem('theme') || 'dark';
 
-  for (let i = 0; i < 80; i++) {
-    const particle = document.createElement('div');
-    particle.style.cssText = `
-      position: absolute;
-      width: ${Math.random() * 5 + 1}px;
-      height: ${Math.random() * 5 + 1}px;
-      background: rgba(15, 240, 252, ${Math.random() * 0.3});
-      border-radius: 50%;
-      left: ${Math.random() * 100}%;
-      top: ${Math.random() * 100}%;
-      animation: float ${Math.random() * 20 + 10}s linear infinite;
-      filter: blur(${Math.random() * 2}px);
-    `;
-    container.appendChild(particle);
-  }
+document.documentElement.setAttribute('data-theme', currentTheme);
 
-  // Add to CSS dynamically
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes float {
-      to { transform: translateY(-100vh) translateX(${Math.random() * 100 - 50}px); }
+themeToggle.addEventListener('click', () => {
+    const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+});
+
+// 2. Floating Particles (Canvas-based)
+class ParticleSystem {
+    constructor() {
+        this.canvas = document.querySelector('.particles-js');
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.colors = ['rgba(15, 240, 252, 0.5)', 'rgba(150, 0, 255, 0.5)'];
+        
+        this.init();
+        this.animate();
+        window.addEventListener('resize', this.resize.bind(this));
     }
-  `;
-  document.head.appendChild(style);
-}
-
-// 2. Glass Card Hover Effects
-function setupCardInteractions() {
-  const cards = document.querySelectorAll('.glass-card');
-  
-  cards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      
-      card.style.transform = `
-        perspective(1000px)
-        rotateX(${(y - centerY) / 15}deg)
-        rotateY(${(centerX - x) / 15}deg)
-      `;
-      card.style.boxShadow = `
-        ${(x - centerX) / 5}px ${(y - centerY) / 5}px 30px rgba(15, 240, 252, 0.2)
-      `;
-    });
-
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
-      card.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.1)';
-    });
-  });
-}
-
-// 3. Modal/Popup System
-function initModals() {
-  const modalTriggers = document.querySelectorAll('[data-modal]');
-  const modals = document.querySelectorAll('.modal');
-  const closeBtns = document.querySelectorAll('.modal-close');
-
-  modalTriggers.forEach(trigger => {
-    trigger.addEventListener('click', () => {
-      const modalId = trigger.dataset.modal;
-      document.getElementById(modalId).classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
-  });
-
-  closeBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      btn.closest('.modal').classList.remove('active');
-      document.body.style.overflow = '';
-    });
-  });
-
-  modals.forEach(modal => {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    });
-  });
-}
-
-// 4. Navigation Smooth Scrolling
-function setupSmoothScrolling() {
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-      e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
+    
+    init() {
+        this.resize();
+        this.particles = [];
+        
+        const particleCount = Math.floor(window.innerWidth / 10);
+        
+        for (let i = 0; i < particleCount; i++) {
+            this.particles.push({
+                x: Math.random() * this.width,
+                y: Math.random() * this.height,
+                size: Math.random() * 3 + 1,
+                speedX: Math.random() * 1 - 0.5,
+                speedY: Math.random() * 1 - 0.5,
+                color: this.colors[Math.floor(Math.random() * this.colors.length)]
+            });
+        }
+    }
+    
+    resize() {
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+    }
+    
+    animate() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        
+        this.particles.forEach(p => {
+            p.x += p.speedX;
+            p.y += p.speedY;
+            
+            if (p.x < 0 || p.x > this.width) p.speedX *= -1;
+            if (p.y < 0 || p.y > this.height) p.speedY *= -1;
+            
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            this.ctx.fillStyle = p.color;
+            this.ctx.fill();
         });
-      }
-    });
-  });
+        
+        requestAnimationFrame(this.animate.bind(this));
+    }
 }
 
-// 5. Voice Command System
-function initVoiceControl() {
-  const voiceBtn = document.getElementById('voice-btn');
-  if (!('webkitSpeechRecognition' in window) || !voiceBtn) return;
-
-  const recognition = new webkitSpeechRecognition();
-  recognition.continuous = false;
-  recognition.interimResults = false;
-
-  voiceBtn.addEventListener('click', () => {
-    recognition.start();
-    voiceBtn.classList.add('listening');
-    voiceBtn.innerHTML = '🎤 Listening...';
-  });
-
-  recognition.onresult = (e) => {
-    const command = e.results[0][0].transcript.toLowerCase();
-    if (command.includes('about')) navigateTo('about.html');
-    if (command.includes('health')) navigateTo('health.html');
-    if (command.includes('skills')) navigateTo('skills.html');
-    // Add more commands
-  };
-
-  recognition.onend = () => {
-    voiceBtn.classList.remove('listening');
-    voiceBtn.innerHTML = '🎤 Voice Control';
-  };
-}
-
-// Helper function for voice navigation
-function navigateTo(page) {
-  window.location.href = page;
-}
-
-// 6. Page Load Animations
-function animatePageLoad() {
-  const elements = document.querySelectorAll('.fade-in');
-  elements.forEach((el, i) => {
-    setTimeout(() => {
-      el.style.opacity = 1;
-      el.style.transform = 'translateY(0)';
-    }, 150 * i);
-  });
-}
-
-// ======================
-// INITIALIZE EVERYTHING
-// ======================
+// Initialize everything when DOM loads
 document.addEventListener('DOMContentLoaded', () => {
-  initParticles();
-  setupCardInteractions();
-  initModals();
-  setupSmoothScrolling();
-  initVoiceControl();
-  animatePageLoad();
+    new ParticleSystem();
+    
+    // 3. Glass card hover effects
+    const cards = document.querySelectorAll('.glass-card');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            card.style.transform = `
+                perspective(1000px)
+                rotateX(${(y - rect.height/2) / 20}deg)
+                rotateY(${(x - rect.width/2) / -20}deg)
+            `;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+        });
+    });
+    
+    // 4. Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
 });
