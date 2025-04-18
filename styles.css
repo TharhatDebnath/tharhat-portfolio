@@ -1,56 +1,292 @@
-/* Base Styles */
+/* === Cosmic Design System === */
 :root {
-    --neon-blue: #0ff0fc;
-    --neon-purple: #9600ff;
-    --deep-space: #0a0a20;
-    --glass: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    /* Color Palette */
+    --cosmic-void: #0a0b0f;
+    --stardust: rgba(255,255,255,0.85);
+    --nebula-blue: #0ff0fc;
+    --quantum-purple: #9600ff;
+    --event-horizon: #16181d;
+    
+    /* Glass Effects */
+    --glass-light: rgba(255, 255, 255, 0.05);
+    --glass-dark: rgba(5, 5, 10, 0.4);
+    --glass-edge: rgba(255, 255, 255, 0.1);
+    
+    /* Typography */
+    --font-heading: 'Unbounded', sans-serif;
+    --font-body: 'Space Grotesk', sans-serif;
+    
+    /* Effects */
+    --blur-intensity: blur(16px);
+    --transition-all: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Welcome Page Specific */
-.welcome-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+[data-theme="light"] {
+    --cosmic-void: #f5f7ff;
+    --stardust: rgba(10,11,15,0.9);
+    --event-horizon: #e6e9f5;
+    --glass-light: rgba(255, 255, 255, 0.7);
+    --glass-dark: rgba(255, 255, 255, 0.5);
+    --glass-edge: rgba(0, 0, 0, 0.1);
+}
+
+/* === Base Styles === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--cosmic-void);
+    color: var(--stardust);
     min-height: 100vh;
-    padding: 20px;
+    line-height: 1.6;
+    overflow-x: hidden;
 }
 
-.welcome-card {
-    max-width: 600px;
-    text-align: center;
-    padding: 40px;
+/* === Noise Texture === */
+.noise-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+    z-index: -1;
+    pointer-events: none;
 }
 
-.cta-button {
-    display: inline-block;
-    background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
-    color: white;
-    padding: 15px 30px;
-    border-radius: 50px;
-    text-decoration: none;
-    margin-top: 30px;
-    transition: transform 0.3s;
+/* === Glass Morphism === */
+.glass-header, 
+.glass-main, 
+.glass-card, 
+.glass-button {
+    background: linear-gradient(
+        135deg,
+        var(--glass-light),
+        var(--glass-dark)
+    );
+    backdrop-filter: var(--blur-intensity);
+    -webkit-backdrop-filter: var(--blur-intensity);
+    border: 1px solid var(--glass-edge);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    transition: var(--transition-all);
 }
 
-.cta-button:hover {
-    transform: translateY(-5px);
+/* === Header Styles === */
+.glass-header {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    right: 2rem;
+    padding: 1.5rem 2rem;
+    border-radius: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
 }
 
-/* Shared Components */
-.glass-card {
-    background: var(--glass);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    padding: 30px;
-    margin: 20px 0;
+.logo {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
 }
 
-.neon-title {
-    font-family: 'Orbitron', sans-serif;
-    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+.logo span {
+    background: linear-gradient(90deg, var(--nebula-blue), var(--quantum-purple));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+}
+
+/* === Main Content === */
+.glass-main {
+    margin: 10rem auto;
+    width: 90%;
+    max-width: 1200px;
+    border-radius: 2rem;
+    padding: 4rem;
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.gradient-text {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(90deg, var(--stardust), rgba(255,255,255,0.7));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.gradient-text span {
+    background: linear-gradient(90deg, var(--nebula-blue), var(--quantum-purple));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    opacity: 0.9;
+}
+
+/* === Info Grid === */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.glass-card {
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    transition: var(--transition-all);
+}
+
+.glass-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+        0 12px 40px rgba(15, 240, 252, 0.1),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.glass-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* === Buttons === */
+.glass-button {
+    padding: 1rem 2rem;
+    border-radius: 100px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    color: var(--stardust);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.glass-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--nebula-blue), var(--quantum-purple));
+    z-index: -1;
+    opacity: 0;
+    transition: var(--transition-all);
+}
+
+.glass-button:hover::before {
+    opacity: 1;
+}
+
+.glass-button.outline {
+    background: transparent;
+    border: 1px solid var(--glass-edge);
+}
+
+.glass-button.outline:hover {
+    border-color: transparent;
+}
+
+.cta-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* === Theme Toggle === */
+#theme-toggle {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--glass-dark);
+    border: 1px solid var(--glass-edge);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: var(--transition-all);
+}
+
+#theme-toggle:hover {
+    transform: rotate(15deg) scale(1.1);
+}
+
+#theme-toggle svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: var(--stardust);
+    transition: var(--transition-all);
+}
+
+#theme-toggle .moon {
+    position: absolute;
+}
+
+#theme-toggle .sun {
+    opacity: 0;
+}
+
+[data-theme="light"] #theme-toggle .moon {
+    opacity: 0;
+}
+
+[data-theme="light"] #theme-toggle .sun {
+    opacity: 1;
+}
+
+/* === Particles === */
+.particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* === Responsive Design === */
+@media (max-width: 768px) {
+    .glass-header {
+        top: 1rem;
+        left: 1rem;
+        right: 1rem;
+        padding: 1rem;
+    }
+    
+    .glass-main {
+        padding: 2rem;
+        margin-top: 8rem;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
 }
