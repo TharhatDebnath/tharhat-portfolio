@@ -1,53 +1,42 @@
-// === Modern ES Module Implementation ===
-
-// 1. Theme Toggle
+// Theme Toggle
 const themeToggle = document.getElementById('theme-toggle');
-const currentTheme = localStorage.getItem('theme') || 'dark';
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        document.documentElement.setAttribute('data-theme', 
+            document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
+        );
+    });
+}
 
-document.documentElement.setAttribute('data-theme', currentTheme);
-
-themeToggle.addEventListener('click', () => {
-    const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-});
-
-// 2. Floating Particles (Canvas-based)
+// Particle System
 class ParticleSystem {
     constructor() {
         this.canvas = document.querySelector('.particles-js');
+        if (!this.canvas) return;
+        
         this.ctx = this.canvas.getContext('2d');
         this.particles = [];
-        this.colors = ['rgba(15, 240, 252, 0.5)', 'rgba(150, 0, 255, 0.5)'];
-        
+        this.resize();
         this.init();
         this.animate();
-        window.addEventListener('resize', this.resize.bind(this));
-    }
-    
-    init() {
-        this.resize();
-        this.particles = [];
-        
-        const particleCount = Math.floor(window.innerWidth / 10);
-        
-        for (let i = 0; i < particleCount; i++) {
-            this.particles.push({
-                x: Math.random() * this.width,
-                y: Math.random() * this.height,
-                size: Math.random() * 3 + 1,
-                speedX: Math.random() * 1 - 0.5,
-                speedY: Math.random() * 1 - 0.5,
-                color: this.colors[Math.floor(Math.random() * this.colors.length)]
-            });
-        }
+        window.addEventListener('resize', () => this.resize());
     }
     
     resize() {
-        this.width = window.innerWidth;
-        this.height = window.innerHeight;
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
+        this.width = this.canvas.width = window.innerWidth;
+        this.height = this.canvas.height = window.innerHeight;
+    }
+    
+    init() {
+        const particleCount = Math.floor(window.innerWidth / 10);
+        this.particles = Array.from({ length: particleCount }, () => ({
+            x: Math.random() * this.width,
+            y: Math.random() * this.height,
+            size: Math.random() * 3 + 1,
+            speedX: Math.random() * 1 - 0.5,
+            speedY: Math.random() * 1 - 0.5,
+            color: `rgba(15, 240, 252, ${Math.random() * 0.3 + 0.1})`
+        }));
     }
     
     animate() {
@@ -66,17 +55,16 @@ class ParticleSystem {
             this.ctx.fill();
         });
         
-        requestAnimationFrame(this.animate.bind(this));
+        requestAnimationFrame(() => this.animate());
     }
 }
 
-// Initialize everything when DOM loads
+// Initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
     new ParticleSystem();
     
-    // 3. Glass card hover effects
-    const cards = document.querySelectorAll('.glass-card');
-    cards.forEach(card => {
+    // Card hover effects
+    document.querySelectorAll('.glass-card').forEach(card => {
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -91,16 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         card.addEventListener('mouseleave', () => {
             card.style.transform = '';
-        });
-    });
-    
-    // 4. Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
         });
     });
 });
