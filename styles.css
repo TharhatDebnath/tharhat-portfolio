@@ -3,16 +3,13 @@
     --neon-blue: #0ff0fc;
     --neon-purple: #9600ff;
     --deep-space: #0a0a20;
-    --matrix-green: #00ff41;
 }
 
 body {
     margin: 0;
-    padding: 0;
     font-family: 'Rajdhani', sans-serif;
-    background-color: var(--deep-space);
+    background: var(--deep-space);
     color: white;
-    overflow-x: hidden;
 }
 
 /* Particles Background */
@@ -25,81 +22,6 @@ body {
     z-index: -1;
 }
 
-/* ComplexAI Chat Interface */
-.complex-ai {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 380px;
-    background: rgba(10, 10, 32, 0.95);
-    border: 1px solid var(--neon-blue);
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 30px rgba(15, 240, 252, 0.3);
-    overflow: hidden;
-    z-index: 1000;
-    transform: translateZ(50px);
-}
-
-.ai-header {
-    padding: 15px;
-    background: linear-gradient(90deg, var(--deep-space), var(--neon-purple));
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--neon-blue);
-}
-
-.ai-messages {
-    height: 300px;
-    padding: 15px;
-    overflow-y: auto;
-    background: rgba(0, 0, 0, 0.3);
-}
-
-.ai-input {
-    display: flex;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.5);
-}
-
-/* Message Styles */
-.message {
-    margin: 10px 0;
-    padding: 10px 15px;
-    border-radius: 18px;
-    max-width: 80%;
-    line-height: 1.4;
-}
-
-.user-message {
-    background: rgba(15, 240, 252, 0.15);
-    border: 1px solid var(--neon-blue);
-    margin-left: auto;
-}
-
-.ai-message {
-    background: rgba(150, 0, 255, 0.15);
-    border: 1px solid var(--neon-purple);
-    margin-right: auto;
-}
-
-/* Animations */
-@keyframes pulse {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-}
-
-.pulse-dot {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    background: var(--matrix-green);
-    border-radius: 50%;
-    margin-right: 8px;
-    animation: pulse 1.5s infinite;
-}
-
 /* Typewriter Effect */
 .typewriter {
     border-right: 3px solid var(--neon-blue);
@@ -109,4 +31,28 @@ body {
 @keyframes blink-caret {
     from, to { border-color: transparent; }
     50% { border-color: var(--neon-blue); }
+}
+
+/* Sections */
+section {
+    padding: 100px 10%;
+    min-height: 100vh;
+}
+
+#hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Header */
+header {
+    position: fixed;
+    width: 100%;
+    padding: 20px 5%;
+    display: flex;
+    justify-content: space-between;
+    backdrop-filter: blur(10px);
+    z-index: 100;
 }
